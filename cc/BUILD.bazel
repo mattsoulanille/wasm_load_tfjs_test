@@ -1,0 +1,34 @@
+load("@emsdk//emscripten_toolchain:wasm_rules.bzl", "wasm_cc_binary")
+load("@build_bazel_rules_nodejs//:index.bzl", "js_library")
+load("@npm//@bazel/typescript:index.bzl", "ts_library")
+
+
+package(default_visibility = ["//visibility:public"])
+
+cc_binary(
+    name = "main",
+    srcs = [
+        "main.cc",
+    ],
+    linkopts = [
+        "-s MODULARIZE=1",
+        "-s EXPORT_NAME='MainWasm'",
+    ],
+)
+
+wasm_cc_binary(
+    name = "main_wasm",
+    cc_target = ":main",
+)
+
+js_library(
+    name = "main_lib",
+    srcs = [
+        ":main_wasm",
+        "index.js",
+        "index.d.ts",
+        #"main_wasm.d.ts",
+        #"package.json",
+    ],
+    package_name = "main_wasm",
+)

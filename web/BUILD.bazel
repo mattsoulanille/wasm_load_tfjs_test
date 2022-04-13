@@ -1,0 +1,69 @@
+load("@npm//@bazel/typescript:index.bzl", "ts_library", "ts_project")
+load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_test", "nodejs_binary")
+load ("@npm//http-server:index.bzl", "http_server");
+load("@build_bazel_rules_nodejs//:index.bzl", "pkg_web")
+load("@npm//@bazel/esbuild:index.bzl", "esbuild")
+
+# ts_project(
+#     name = "index_lib",
+#     tsconfig = {
+#         "declaration": True,
+#      #   "inlineSources": True,
+#     },
+#     #source_map = True,
+#     srcs = [
+#         "index.ts",
+#     ],
+#     deps = [
+#         "//cc:main_lib",
+#     ]
+# )
+
+ts_library(
+    name = "index_lib",
+    srcs = [
+        "index.ts",
+    ],
+    deps = [
+        #"//cc:foo_lib",
+        "//cc:main_lib",
+    ]
+)
+
+esbuild(
+    name = "index_bundle",
+    entry_point = "index.ts",
+    sources_content = True,
+    deps = [
+        ":index_lib",
+        "//cc:main_lib",
+    ],
+    external = [
+        "path",
+        "fs",
+    ],
+)
+
+pkg_web(
+    name = "server_files",
+    srcs = [
+        "index.html",
+        ":index_bundle",
+        "//cc:main_wasm",
+    ],
+)
+
+http_server(
+    name = "server",
+    data = [":server_files"],
+    templated_args = ["web/server_files"],
+)
+
+nodejs_binary(
+    name = "index_bin",
+    data = [
+        ":index_lib",
+    ],
+    entry_point = ":index.ts",
+)
+
