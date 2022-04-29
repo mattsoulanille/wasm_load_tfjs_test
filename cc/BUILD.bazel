@@ -5,15 +5,33 @@ load("@npm//@bazel/typescript:index.bzl", "ts_library")
 
 package(default_visibility = ["//visibility:public"])
 
+filegroup(
+    name = "cc_srcs",
+    srcs = glob(["*.cc"]),
+)
+
 cc_binary(
     name = "main",
     srcs = [
         "main.cc",
     ],
-    linkopts = [
-        "-s MODULARIZE=1",
-        "-s EXPORT_NAME='MainWasm'",
+    copts = [
+        "-g3",
+        "-gsource-map",
+        #"-pthread",
     ],
+    linkopts = [
+       "-s MODULARIZE=1",
+       "-s EXPORT_NAME='MainWasm'",
+       #"-s ASYNCIFY",
+       #"-s ASYNCIFY_IGNORE_INDIRECT",
+       #"-s ASYNCIFY_IMPORTS=",
+       #"-s ASYNCIFY_ADVISE",
+       #"-s USE_PTHREADS",
+       #"-s PROXY_TO_PTHREAD",
+       "-g3",
+       "-gsource-map",
+   ],
 )
 
 wasm_cc_binary(

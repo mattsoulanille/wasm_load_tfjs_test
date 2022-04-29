@@ -1,8 +1,10 @@
 load("@npm//@bazel/typescript:index.bzl", "ts_library", "ts_project")
 load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_test", "nodejs_binary")
 load ("@npm//http-server:index.bzl", "http_server");
+load ("@npm//node-static:index.bzl", "static");
 load("@build_bazel_rules_nodejs//:index.bzl", "pkg_web")
 load("@npm//@bazel/esbuild:index.bzl", "esbuild")
+
 
 # ts_project(
 #     name = "index_lib",
@@ -25,8 +27,9 @@ ts_library(
         "index.ts",
     ],
     deps = [
-        #"//cc:foo_lib",
         "//cc:main_lib",
+        "@npm//@tensorflow/tfjs",
+        "@npm//comlink",
     ]
 )
 
@@ -41,6 +44,34 @@ esbuild(
     external = [
         "path",
         "fs",
+        "perf_hooks",
+    ],
+)
+
+ts_library(
+    name = "worker_lib",
+    srcs = [
+        "worker.ts",
+    ],
+    deps = [
+        "//cc:main_lib",
+        "@npm//@tensorflow/tfjs",
+        "@npm//comlink",
+    ],
+)
+
+esbuild(
+    name = "worker_bundle",
+    entry_point = "worker.ts",
+    sources_content = True,
+    deps = [
+        ":worker_lib",
+        "//cc:main_lib",
+    ],
+    external = [
+        "path",
+        "fs",
+        "perf_hooks",
     ],
 )
 
@@ -49,14 +80,30 @@ pkg_web(
     srcs = [
         "index.html",
         ":index_bundle",
+        #":worker_bundle",
         "//cc:main_wasm",
+        "//cc:cc_srcs",
     ],
 )
 
-http_server(
+# http_server(
+#     name = "server",
+#     data = [":server_files"],
+#     templated_args = [
+#         "-c-1",
+#         "web/server_files",
+
+#     ],
+# )
+
+static(
     name = "server",
     data = [":server_files"],
-    templated_args = ["web/server_files"],
+    templated_args = [
+        "-a 0.0.0.0",
+        "-H '{\"Cross-Origin-Opener-Policy\": \"same-origin\", \"Cross-Origin-Embedder-Policy\": \"require-corp\", \"Cache-Control\": \"no-cache, must-revalidate\"}'", # CORS headers for SharedArrayBuffer. Cache headers.
+        "web/server_files",
+    ],
 )
 
 nodejs_binary(
