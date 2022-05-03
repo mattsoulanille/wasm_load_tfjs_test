@@ -4,6 +4,7 @@
   "main": "index.js",
   "license": "Apache-2.0",
   "scripts": {
+    "build-tfjs": "cd tfjs/tfjs && yarn && yarn build-deps && yarn build",
     "serve": "yarn ibazel run //web:server"
   },
   "devDependencies": {
@@ -15,7 +16,7 @@
     "@bazel/typescript": "5.4.2",
     "@rollup/plugin-commonjs": "^22.0.0",
     "@rollup/plugin-node-resolve": "^13.3.0",
-    "@tensorflow/tfjs": "file:../tfjs-main/tfjs",
+    "@tensorflow/tfjs": "file:tfjs/tfjs",
     "comlink": "^4.3.1",
     "esbuild": "^0.14.38",
     "http-server": "^14.1.0",

@@ -138,42 +138,42 @@
     estree-walker "^1.0.1"
     picomatch "^2.2.2"
 
-"@tensorflow/tfjs-backend-cpu@link:../tfjs-main/link-package/node_modules/@tensorflow/link-package/node_modules/@tensorflow/tfjs-backend-cpu":
+"@tensorflow/tfjs-backend-cpu@link:tfjs/link-package/node_modules/@tensorflow/link-package/node_modules/@tensorflow/tfjs-backend-cpu":
   version "0.0.0"
 
-"@tensorflow/tfjs-backend-cpu@link:../tfjs-main/link-package/node_modules/@tensorflow/tfjs-backend-cpu":
-  version "0.0.0"
-  uid ""
-
-"@tensorflow/tfjs-backend-webgl@link:../tfjs-main/link-package/node_modules/@tensorflow/tfjs-backend-webgl":
+"@tensorflow/tfjs-backend-cpu@link:tfjs/link-package/node_modules/@tensorflow/tfjs-backend-cpu":
   version "0.0.0"
   uid ""
 
-"@tensorflow/tfjs-converter@link:../tfjs-main/link-package/node_modules/@tensorflow/tfjs-converter":
+"@tensorflow/tfjs-backend-webgl@link:tfjs/link-package/node_modules/@tensorflow/tfjs-backend-webgl":
   version "0.0.0"
   uid ""
 
-"@tensorflow/tfjs-core@link:../tfjs-main/link-package/node_modules/@tensorflow/tfjs-core":
+"@tensorflow/tfjs-converter@link:tfjs/link-package/node_modules/@tensorflow/tfjs-converter":
   version "0.0.0"
   uid ""
 
-"@tensorflow/tfjs-data@link:../tfjs-main/link-package/node_modules/@tensorflow/tfjs-data":
+"@tensorflow/tfjs-core@link:tfjs/link-package/node_modules/@tensorflow/tfjs-core":
   version "0.0.0"
   uid ""
 
-"@tensorflow/tfjs-layers@link:../tfjs-main/link-package/node_modules/@tensorflow/tfjs-layers":
+"@tensorflow/tfjs-data@link:tfjs/link-package/node_modules/@tensorflow/tfjs-data":
   version "0.0.0"
   uid ""
 
-"@tensorflow/tfjs@file:../tfjs-main/tfjs":
+"@tensorflow/tfjs-layers@link:tfjs/link-package/node_modules/@tensorflow/tfjs-layers":
+  version "0.0.0"
+  uid ""
+
+"@tensorflow/tfjs@file:tfjs/tfjs":
   version "0.0.0"
   dependencies:
-    "@tensorflow/tfjs-backend-cpu" "link:../../.cache/yarn/v6/npm-@tensorflow-tfjs-0.0.0-d1b72e0a-484c-40d0-84b8-d172ea1b0d06-1651538799176/node_modules/@tensorflow/link-package/node_modules/@tensorflow/tfjs-backend-cpu"
-    "@tensorflow/tfjs-backend-webgl" "link:../../.cache/yarn/v6/npm-@tensorflow-tfjs-0.0.0-d1b72e0a-484c-40d0-84b8-d172ea1b0d06-1651538799176/node_modules/@tensorflow/link-package/node_modules/@tensorflow/tfjs-backend-webgl"
-    "@tensorflow/tfjs-converter" "link:../../.cache/yarn/v6/npm-@tensorflow-tfjs-0.0.0-d1b72e0a-484c-40d0-84b8-d172ea1b0d06-1651538799176/node_modules/@tensorflow/link-package/node_modules/@tensorflow/tfjs-converter"
-    "@tensorflow/tfjs-core" "link:../../.cache/yarn/v6/npm-@tensorflow-tfjs-0.0.0-d1b72e0a-484c-40d0-84b8-d172ea1b0d06-1651538799176/node_modules/@tensorflow/link-package/node_modules/@tensorflow/tfjs-core"
-    "@tensorflow/tfjs-data" "link:../../.cache/yarn/v6/npm-@tensorflow-tfjs-0.0.0-d1b72e0a-484c-40d0-84b8-d172ea1b0d06-1651538799176/node_modules/@tensorflow/link-package/node_modules/@tensorflow/tfjs-data"
-    "@tensorflow/tfjs-layers" "link:../../.cache/yarn/v6/npm-@tensorflow-tfjs-0.0.0-d1b72e0a-484c-40d0-84b8-d172ea1b0d06-1651538799176/node_modules/@tensorflow/link-package/node_modules/@tensorflow/tfjs-layers"
+    "@tensorflow/tfjs-backend-cpu" "link:../.cache/yarn/v6/npm-@tensorflow-tfjs-0.0.0-3db020de-2cdf-437a-abb5-0aaf1e457bc6-1651607854728/node_modules/@tensorflow/link-package/node_modules/@tensorflow/tfjs-backend-cpu"
+    "@tensorflow/tfjs-backend-webgl" "link:../.cache/yarn/v6/npm-@tensorflow-tfjs-0.0.0-3db020de-2cdf-437a-abb5-0aaf1e457bc6-1651607854728/node_modules/@tensorflow/link-package/node_modules/@tensorflow/tfjs-backend-webgl"
+    "@tensorflow/tfjs-converter" "link:../.cache/yarn/v6/npm-@tensorflow-tfjs-0.0.0-3db020de-2cdf-437a-abb5-0aaf1e457bc6-1651607854728/node_modules/@tensorflow/link-package/node_modules/@tensorflow/tfjs-converter"
+    "@tensorflow/tfjs-core" "link:../.cache/yarn/v6/npm-@tensorflow-tfjs-0.0.0-3db020de-2cdf-437a-abb5-0aaf1e457bc6-1651607854728/node_modules/@tensorflow/link-package/node_modules/@tensorflow/tfjs-core"
+    "@tensorflow/tfjs-data" "link:../.cache/yarn/v6/npm-@tensorflow-tfjs-0.0.0-3db020de-2cdf-437a-abb5-0aaf1e457bc6-1651607854728/node_modules/@tensorflow/link-package/node_modules/@tensorflow/tfjs-data"
+    "@tensorflow/tfjs-layers" "link:../.cache/yarn/v6/npm-@tensorflow-tfjs-0.0.0-3db020de-2cdf-437a-abb5-0aaf1e457bc6-1651607854728/node_modules/@tensorflow/link-package/node_modules/@tensorflow/tfjs-layers"
     argparse "^1.0.10"
     chalk "^4.1.0"
     core-js "3"
