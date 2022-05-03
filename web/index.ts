@@ -3,6 +3,7 @@ import * as tf from '@tensorflow/tfjs';
 //import * as Comlink from 'comlink';
 
 // Make tf available to wasm
+console.log('hi');
 (window as any)['tf'] = tf;
 const modelUrl =
   "https://storage.googleapis.com/tfjs-models/savedmodel/mobilenet_v2_1.0_224/model.json";
