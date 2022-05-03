@@ -4,12 +4,6 @@
 #include <emscripten.h>
 #include <time.h>
 
-
-EM_JS(void, call_alert, (), {
-  alert('hello, world!');
-  //throw 'all done';
-});
-
 EM_JS(void, load_model, (), {
     const modelUrl =
       "https://storage.googleapis.com/tfjs-models/savedmodel/mobilenet_v2_1.0_224/model.json";
@@ -51,23 +45,6 @@ int main() {
   printf("finished running load_model\n");
   run_model();
   printf("finished running run_model\n");
-
-  double a = 0;
-  double b = 1;
-
-  double start = emscripten_get_now();
-  while (a < 22) {
-    // for (int x = 1; x < 3; x++) {
-    printf("num: %f\n", a);
-    //emscripten_sleep(1);
-    for (int i = 0; i < 50000000; i++) {
-      a += 1 / b;
-      b++;
-    }
-  }
-  double end = emscripten_get_now();
-  double seconds = (end - start) / 1000;
-  printf("Seconds taken for loop: %f\n", seconds);
 
   return 0;
 }

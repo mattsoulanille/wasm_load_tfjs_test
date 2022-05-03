@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "Apache-2.0",
+  "scripts": {
+    "serve": "yarn ibazel run //web:server"
+  },
   "devDependencies": {
     "@bazel/bazelisk": "^1.11.0",
     "@bazel/concatjs": "5.4.2",
