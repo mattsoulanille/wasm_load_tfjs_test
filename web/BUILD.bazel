@@ -5,7 +5,7 @@ load ("@npm//http-server:index.bzl", "http_server");
 load ("@npm//node-static:index.bzl", "static");
 load("@build_bazel_rules_nodejs//:index.bzl", "pkg_web")
 load("@npm//@bazel/esbuild:index.bzl", "esbuild")
-
+load("@npm//@bazel/rollup:index.bzl", "rollup_bundle")
 
 # ts_project(
 #     name = "index_lib",
@@ -34,20 +34,34 @@ ts_library(
     ]
 )
 
-esbuild(
+rollup_bundle(
     name = "index_bundle",
     entry_point = "index.ts",
-    sources_content = True,
     deps = [
         ":index_lib",
         "//cc:main_lib",
+        "@npm//@rollup/plugin-node-resolve",
+        "@npm//@rollup/plugin-commonjs",
+        "@npm//rollup-plugin-sourcemaps",
     ],
-    external = [
-        "path",
-        "fs",
-        "perf_hooks",
-    ],
+    config_file = "//:rollup.config.js",
 )
+    
+
+# esbuild(
+#     name = "index_bundle",
+#     entry_point = "index.ts",
+#     sources_content = True,
+#     deps = [
+#         ":index_lib",
+#         "//cc:main_lib",
+#     ],
+#     external = [
+#         "path",
+#         "fs",
+#         "perf_hooks",
+#     ],
+# )
 
 ts_library(
     name = "worker_lib",

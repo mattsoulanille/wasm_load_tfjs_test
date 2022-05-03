@@ -11,28 +11,16 @@ EM_JS(void, call_alert, (), {
 });
 
 EM_JS(void, load_model, (), {
-  // const modelUrl =
-  //   "https://storage.googleapis.com/tfjs-models/savedmodel/mobilenet_v2_1.0_224/model.json";
-  // //const modelPromise = tf.loadGraphModel(modelUrl);
-  // const model = tf.loadGraphModel(modelUrl);
-  // self.model = model;
-  // return true;
-  // modelPromise.then(model => {
-  //   self.model = model;
-  // });
+    const modelUrl =
+      "https://storage.googleapis.com/tfjs-models/savedmodel/mobilenet_v2_1.0_224/model.json";
     console.log("Loading model");
-    self.model = tf.loadGraphModelSync(
-        tf.io.fromMemorySync(modelData));
+    self.model = tf.loadGraphModelSync(tf.io.httpSync(modelUrl));
     console.log("Loaded model");
 });
 
-EM_JS(bool, poll_model, (), {
-    console.log("polling model");
-    return Boolean(self.model);
-});
-
 EM_JS(void, run_model, (), {
-    model = self.model;
+    console.log("Running model");
+    const model = self.model;
     const zeros = tf.zeros([1, 224, 224, 3]);
     const result = model.predict(zeros);
     result.print();
@@ -48,12 +36,8 @@ EM_ASYNC_JS(int, do_fetch, (), {
   model.predict(zeros).print();
   return 42;
 });
-
-EM_ASYNC_JS(int, call_async, (), {
-    return Promise.resolve(123);
-    //return 123;
-});
 */
+
 extern "C" {
 
 EMSCRIPTEN_KEEPALIVE
@@ -62,18 +46,11 @@ int add(int a, int b) {
 }
 
 int main() {
-  //call_alert();
   printf("Hello, world! %d\n", add(4, 5));
-  //printf("async call %d\n", do_fetch());
-
-  //load_model();
-  //while (!poll_model()) {}
-  // for (int i = 0; i < 7000; i++) {
-  //   if (poll_model()) {
-  //     break;
-  //   }
-  // }
+  load_model();
+  printf("finished running load_model\n");
   run_model();
+  printf("finished running run_model\n");
 
   double a = 0;
   double b = 1;

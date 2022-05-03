@@ -1,3 +1,4 @@
 exports_files([
     "tsconfig.json",
+    "rollup.config.js",
 ]);
