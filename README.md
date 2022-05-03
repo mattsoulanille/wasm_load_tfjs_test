@@ -24,3 +24,5 @@ yarn build-tfjs
 ```shell
 yarn serve
 ```
+
+Check the javascript console for results. The network tab shows the issue with synchronous loading, where only one file can be loaded at a time.
