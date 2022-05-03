@@ -5,7 +5,8 @@
   "license": "Apache-2.0",
   "scripts": {
     "build-tfjs": "cd tfjs/tfjs && yarn && yarn build-deps && yarn build",
-    "serve": "yarn bazel run //web:server"
+    "serve": "yarn bazel run //web:server",
+    "watch": "yarn ibazel run //web:server"
   },
   "devDependencies": {
     "@bazel/bazelisk": "^1.11.0",
