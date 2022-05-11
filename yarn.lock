@@ -168,12 +168,12 @@
 "@tensorflow/tfjs@file:tfjs/tfjs":
   version "0.0.0"
   dependencies:
-    "@tensorflow/tfjs-backend-cpu" "link:../.cache/yarn/v6/npm-@tensorflow-tfjs-0.0.0-3db020de-2cdf-437a-abb5-0aaf1e457bc6-1651607854728/node_modules/@tensorflow/link-package/node_modules/@tensorflow/tfjs-backend-cpu"
-    "@tensorflow/tfjs-backend-webgl" "link:../.cache/yarn/v6/npm-@tensorflow-tfjs-0.0.0-3db020de-2cdf-437a-abb5-0aaf1e457bc6-1651607854728/node_modules/@tensorflow/link-package/node_modules/@tensorflow/tfjs-backend-webgl"
-    "@tensorflow/tfjs-converter" "link:../.cache/yarn/v6/npm-@tensorflow-tfjs-0.0.0-3db020de-2cdf-437a-abb5-0aaf1e457bc6-1651607854728/node_modules/@tensorflow/link-package/node_modules/@tensorflow/tfjs-converter"
-    "@tensorflow/tfjs-core" "link:../.cache/yarn/v6/npm-@tensorflow-tfjs-0.0.0-3db020de-2cdf-437a-abb5-0aaf1e457bc6-1651607854728/node_modules/@tensorflow/link-package/node_modules/@tensorflow/tfjs-core"
-    "@tensorflow/tfjs-data" "link:../.cache/yarn/v6/npm-@tensorflow-tfjs-0.0.0-3db020de-2cdf-437a-abb5-0aaf1e457bc6-1651607854728/node_modules/@tensorflow/link-package/node_modules/@tensorflow/tfjs-data"
-    "@tensorflow/tfjs-layers" "link:../.cache/yarn/v6/npm-@tensorflow-tfjs-0.0.0-3db020de-2cdf-437a-abb5-0aaf1e457bc6-1651607854728/node_modules/@tensorflow/link-package/node_modules/@tensorflow/tfjs-layers"
+    "@tensorflow/tfjs-backend-cpu" "link:../.cache/yarn/v6/npm-@tensorflow-tfjs-0.0.0-957cee98-4108-4f5d-aa6a-1b8562f0609d-1652226476734/node_modules/@tensorflow/link-package/node_modules/@tensorflow/tfjs-backend-cpu"
+    "@tensorflow/tfjs-backend-webgl" "link:../.cache/yarn/v6/npm-@tensorflow-tfjs-0.0.0-957cee98-4108-4f5d-aa6a-1b8562f0609d-1652226476734/node_modules/@tensorflow/link-package/node_modules/@tensorflow/tfjs-backend-webgl"
+    "@tensorflow/tfjs-converter" "link:../.cache/yarn/v6/npm-@tensorflow-tfjs-0.0.0-957cee98-4108-4f5d-aa6a-1b8562f0609d-1652226476734/node_modules/@tensorflow/link-package/node_modules/@tensorflow/tfjs-converter"
+    "@tensorflow/tfjs-core" "link:../.cache/yarn/v6/npm-@tensorflow-tfjs-0.0.0-957cee98-4108-4f5d-aa6a-1b8562f0609d-1652226476734/node_modules/@tensorflow/link-package/node_modules/@tensorflow/tfjs-core"
+    "@tensorflow/tfjs-data" "link:../.cache/yarn/v6/npm-@tensorflow-tfjs-0.0.0-957cee98-4108-4f5d-aa6a-1b8562f0609d-1652226476734/node_modules/@tensorflow/link-package/node_modules/@tensorflow/tfjs-data"
+    "@tensorflow/tfjs-layers" "link:../.cache/yarn/v6/npm-@tensorflow-tfjs-0.0.0-957cee98-4108-4f5d-aa6a-1b8562f0609d-1652226476734/node_modules/@tensorflow/link-package/node_modules/@tensorflow/tfjs-layers"
     argparse "^1.0.10"
     chalk "^4.1.0"
     core-js "3"
@@ -300,6 +300,11 @@ brace-expansion@^1.1.7:
   dependencies:
     balanced-match "^1.0.0"
     concat-map "0.0.1"
+
+buffer-backed-object@^0.3.1:
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/buffer-backed-object/-/buffer-backed-object-0.3.1.tgz#58b5e456ce130bb3843129990449e2e7723596ae"
+  integrity sha512-BxYE/sI/D2qjptDro/AsF/TAdx9lx6BgUj5NP/ktWsBmcf3y+5BB/RbfXmNgGPhKR9RIYcC0VhE7S2kacZQQkA==
 
 buffer-from@^1.0.0:
   version "1.1.2"

@@ -95,7 +95,7 @@ pkg_web(
     srcs = [
         "index.html",
         ":index_bundle",
-        #":worker_bundle",
+        ":worker_bundle",
         "//cc:main_wasm",
         "//cc:cc_srcs",
     ],
