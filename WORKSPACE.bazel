@@ -74,9 +74,9 @@ esbuild_repositories(npm_repository = "npm")
 # Emscripten toolchain
 http_archive(
     name = "emsdk",
-    sha256 = "98e2a5b5aefd6beb8265991cdde2992f4eac1aacbad52da425f877b823de9560",
-    strip_prefix = "emsdk-3.1.8/bazel",
-    urls = ["https://github.com/emscripten-core/emsdk/archive/refs/tags/3.1.8.tar.gz"],
+    sha256 = "3a207eed627366d9a7b31a634fa97c365cea0b6564b27e0cfadf7e53781606a3",
+    strip_prefix = "emsdk-3.1.10/bazel",
+    urls = ["https://github.com/emscripten-core/emsdk/archive/refs/tags/3.1.10.tar.gz"],
     repo_mapping = {"@nodejs": "@nodejs_host"},
 )
 
