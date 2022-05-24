@@ -1,3 +1,20 @@
+/**
+ * @license
+ * Copyright 2022 Google LLC. All Rights Reserved.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * =============================================================================
+ */
+
 import {parseUrl} from '@tensorflow/tfjs-core/dist/io/http';
 import {concatenateArrayBuffers, LoadOptions, ModelArtifacts, ModelJSON, WeightsManifestEntry} from '@tensorflow/tfjs-core/dist/io/io';
 import {IOHandlerSync, WeightsManifestConfig} from '@tensorflow/tfjs-core/dist/io/types';
@@ -5,7 +22,10 @@ import {IOHandlerSync, WeightsManifestConfig} from '@tensorflow/tfjs-core/dist/i
 
 function fetchSync(path: string, requestInit?: RequestInit) {
   const request = new XMLHttpRequest();
-  request.open(requestInit && requestInit.method || 'GET', path, false);
+  request.open(requestInit?.method || 'GET', path, false);
+  // This is a hack to prevent non-ascii characters from being mangled.
+  // Even though we're not necessarily loading text, XMLHttpRequest thinks
+  // we are.
   request.overrideMimeType('text/plain; charset=x-user-defined');
   request.send(null);
   return {
@@ -19,6 +39,18 @@ function fetchSync(path: string, requestInit?: RequestInit) {
   };
 }
 
+/**
+ * A TFJS IOHandlerSync based on a synchronous XMLHttpRequest.
+ *
+ * This function uses the same model format as the async IOHandlers, so
+ * it first loads the model's JSON file, reads the weights manifest, and then
+ * loads the weights. This is inefficient because it has to load the weights one
+ * at a time (since it's synchronous).
+ *
+ * This class could be adapted to use a different, more efficient format. For
+ * example, using JSZip (https://stuk.github.io/jszip/), it may be possible
+ * to zip all the model files into a single archive and load them all at once.
+ */
 export class HTTPRequestSync implements IOHandlerSync {
   constructor(private path: string, private loadOptions?: LoadOptionsSync) { }
 

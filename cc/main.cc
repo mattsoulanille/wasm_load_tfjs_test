@@ -1,3 +1,20 @@
+/**
+ * @license
+ * Copyright 2022 Google LLC. All Rights Reserved.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * =============================================================================
+ */
+
 #include <stdio.h>
 #include <ctime>
 #include <string>
@@ -21,26 +38,10 @@ EM_JS(void, run_model, (), {
     console.log("Ran model");
 });
 
-/*
-EM_ASYNC_JS(int, do_fetch, (), {
-  const modelUrl =
-    "https://storage.googleapis.com/tfjs-models/savedmodel/mobilenet_v2_1.0_224/model.json";
-  const model = await tf.loadGraphModel(modelUrl);
-  const zeros = tf.zeros([1, 224, 224, 3]);
-  model.predict(zeros).print();
-  return 42;
-});
-*/
-
 extern "C" {
 
-EMSCRIPTEN_KEEPALIVE
-int add(int a, int b) {
-  return a + b;
-}
-
 int main() {
-  printf("Hello, world! %d\n", add(4, 5));
+  printf("Loading model\n");
   load_model();
   printf("finished running load_model\n");
   run_model();
