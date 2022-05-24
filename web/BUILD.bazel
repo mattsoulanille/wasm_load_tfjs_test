@@ -26,10 +26,12 @@ ts_library(
     name = "index_lib",
     srcs = [
         "index.ts",
+        "http_sync.ts",
     ],
     deps = [
         "//cc:main_lib",
         "@npm//@tensorflow/tfjs",
+        "@npm//@tensorflow/tfjs-core",
         "@npm//comlink",
     ]
 )

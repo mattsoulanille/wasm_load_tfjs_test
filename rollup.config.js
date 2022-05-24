@@ -9,7 +9,7 @@ export default {
   },
   plugins: [
     nodeResolve({browser: true}),
-    commonjs({ignore: ['fs', 'path']}),
+    commonjs({ignore: ['fs', 'path', 'perf_hooks']}),
     sourcemaps(),
   ],
   external: ['path', 'fs'],

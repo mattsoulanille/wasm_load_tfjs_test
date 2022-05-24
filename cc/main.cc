@@ -8,7 +8,7 @@ EM_JS(void, load_model, (), {
     const modelUrl =
       "https://storage.googleapis.com/tfjs-models/savedmodel/mobilenet_v2_1.0_224/model.json";
     console.log("Loading model");
-    self.model = tf.loadGraphModelSync(tf.io.httpSync(modelUrl));
+    self.model = tf.loadGraphModelSync(httpSync(modelUrl));
     console.log("Loaded model");
 });
 

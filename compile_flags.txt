@@ -1,6 +1,8 @@
 -I
 bazel-wasm_load_tfjs_test/external/emscripten_bin_linux/emscripten/cache/sysroot/include/emscripten/
 -I
+bazel-wasm_load_tfjs_test/external/emscripten_bin_linux/emscripten/cache/sysroot/include/
+-I
 /usr/include/c++/11/
 -std=c++11
 

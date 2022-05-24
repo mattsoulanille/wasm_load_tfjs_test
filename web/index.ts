@@ -1,9 +1,15 @@
 import {Init} from 'main_wasm';
 import * as tf from '@tensorflow/tfjs';
+import {httpSync} from './http_sync';
 //import * as Comlink from 'comlink';
 
 // Make tf available to wasm
 (window as any)['tf'] = tf;
+// Same with http_sync
+(window as any)['httpSync'] = httpSync;
+const modelUrl =
+  "https://storage.googleapis.com/tfjs-models/savedmodel/mobilenet_v2_1.0_224/model.json";
+console.log(tf.loadGraphModelSync(httpSync(modelUrl)));
 
 async function main() {
   const MainWasm = await Init({
