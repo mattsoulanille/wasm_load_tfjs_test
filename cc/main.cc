@@ -21,21 +21,18 @@
 #include <emscripten.h>
 #include <time.h>
 
+
 EM_JS(void, load_model, (), {
     const modelUrl =
       "https://storage.googleapis.com/tfjs-models/savedmodel/mobilenet_v2_1.0_224/model.json";
-    console.log("Loading model");
     self.model = tf.loadGraphModelSync(httpSync(modelUrl));
-    console.log("Loaded model");
 });
 
 EM_JS(void, run_model, (), {
-    console.log("Running model");
     const model = self.model;
     const zeros = tf.zeros([1, 224, 224, 3]);
     const result = model.predict(zeros);
     result.print();
-    console.log("Ran model");
 });
 
 extern "C" {

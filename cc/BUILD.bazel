@@ -18,7 +18,7 @@ cc_binary(
     copts = [
         "-g3",
         "-gsource-map",
-        #"-pthread",
+        "-pthread",
     ],
     linkopts = [
         "-s MODULARIZE=1",
@@ -27,8 +27,8 @@ cc_binary(
        #"-s ASYNCIFY_IGNORE_INDIRECT",
        #"-s ASYNCIFY_IMPORTS=",
         #"-s ASYNCIFY_ADVISE",
-        #"-s USE_PTHREADS",
-       #"-s PTHREAD_POOL_SIZE=3",
+        "-s USE_PTHREADS",
+        "-s PTHREAD_POOL_SIZE=1",
        #"-s PROXY_TO_PTHREAD",
        "-g3",
        "-gsource-map",

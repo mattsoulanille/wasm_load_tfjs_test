@@ -21,15 +21,14 @@ import {httpSync} from './http_sync';
 
 // Make tf available to wasm by setting it on the global object.
 // There's almost certainly a better way to do this, but this is simple.
-(window as any)['tf'] = tf;
+(globalThis as any)['tf'] = tf;
 // Make httpSync available to wasm.
-(window as any)['httpSync'] = httpSync;
+(globalThis as any)['httpSync'] = httpSync;
+(globalThis as any)['MainWasm'] = Init;
 
 async function main() {
   // Load wasm by running its Init function, which runs main().
-  await Init({
-    locateFile: (f: string) => `cc/main_wasm/${f}`
-  });
+  await Init({});
 }
 
 // The javascript main() function, not related to wasm.

@@ -42,6 +42,9 @@ pkg_web(
         "//cc:main_wasm",
         "//cc:cc_srcs",
     ],
+    additional_root_paths = [
+        "cc/main_wasm",
+    ],
 )
 
 static(
