@@ -46,8 +46,6 @@ js_library(
         ":main_wasm",
         "index.js",
         "index.d.ts",
-        #"main_wasm.d.ts",
-        #"package.json",
     ],
     package_name = "main_wasm",
 )

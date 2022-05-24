@@ -7,21 +7,6 @@ load("@build_bazel_rules_nodejs//:index.bzl", "pkg_web")
 load("@npm//@bazel/esbuild:index.bzl", "esbuild")
 load("@npm//@bazel/rollup:index.bzl", "rollup_bundle")
 
-# ts_project(
-#     name = "index_lib",
-#     tsconfig = {
-#         "declaration": True,
-#      #   "inlineSources": True,
-#     },
-#     #source_map = True,
-#     srcs = [
-#         "index.ts",
-#     ],
-#     deps = [
-#         "//cc:main_lib",
-#     ]
-# )
-
 ts_library(
     name = "index_lib",
     srcs = [
@@ -48,70 +33,16 @@ rollup_bundle(
     ],
     config_file = "//:rollup.config.js",
 )
-    
-
-# esbuild(
-#     name = "index_bundle",
-#     entry_point = "index.ts",
-#     sources_content = True,
-#     deps = [
-#         ":index_lib",
-#         "//cc:main_lib",
-#     ],
-#     external = [
-#         "path",
-#         "fs",
-#         "perf_hooks",
-#     ],
-# )
-
-ts_library(
-    name = "worker_lib",
-    srcs = [
-        "worker.ts",
-    ],
-    deps = [
-        "//cc:main_lib",
-        "@npm//@tensorflow/tfjs",
-        "@npm//comlink",
-    ],
-)
-
-esbuild(
-    name = "worker_bundle",
-    entry_point = "worker.ts",
-    sources_content = True,
-    deps = [
-        ":worker_lib",
-        "//cc:main_lib",
-    ],
-    external = [
-        "path",
-        "fs",
-        "perf_hooks",
-    ],
-)
 
 pkg_web(
     name = "server_files",
     srcs = [
         "index.html",
         ":index_bundle",
-        #":worker_bundle",
         "//cc:main_wasm",
         "//cc:cc_srcs",
     ],
 )
-
-# http_server(
-#     name = "server",
-#     data = [":server_files"],
-#     templated_args = [
-#         "-c-1",
-#         "web/server_files",
-
-#     ],
-# )
 
 static(
     name = "server",
