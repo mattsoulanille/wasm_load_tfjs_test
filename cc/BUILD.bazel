@@ -28,7 +28,7 @@ cc_binary(
        #"-s ASYNCIFY_IMPORTS=",
         #"-s ASYNCIFY_ADVISE",
         "-s USE_PTHREADS",
-        "-s PTHREAD_POOL_SIZE=1",
+        "-s PTHREAD_POOL_SIZE=4",
        #"-s PROXY_TO_PTHREAD",
        "-g3",
        "-gsource-map",

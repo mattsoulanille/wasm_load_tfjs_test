@@ -26,6 +26,7 @@ import {httpSync} from './http_sync';
 (globalThis as any)['httpSync'] = httpSync;
 (globalThis as any)['MainWasm'] = Init;
 
+console.log('hello from js');
 async function main() {
   // Load wasm by running its Init function, which runs main().
   await Init({});
