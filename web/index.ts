@@ -15,7 +15,7 @@
  * =============================================================================
  */
 
-import {Init} from 'main_wasm';
+//import {Init} from 'main_wasm';
 import * as tf from '@tensorflow/tfjs';
 import {httpSync} from './http_sync';
 
@@ -24,12 +24,14 @@ import {httpSync} from './http_sync';
 (globalThis as any)['tf'] = tf;
 // Make httpSync available to wasm.
 (globalThis as any)['httpSync'] = httpSync;
-(globalThis as any)['MainWasm'] = Init;
+//(globalThis as any)['MainWasm'] = Init;
 
 console.log('hello from js');
+let LibraryManager: unknown;
+console.log(LibraryManager);
 async function main() {
   // Load wasm by running its Init function, which runs main().
-  await Init({});
+//  await Init({});
 }
 
 // The javascript main() function, not related to wasm.
