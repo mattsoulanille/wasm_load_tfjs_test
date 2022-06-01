@@ -12,7 +12,7 @@ Demo loading a file synchronously using a WASM pthread proxy. This method uses a
 ### Clone the repo
 
 ```shell
-git clone --recurse-submodules https://github.com/mattsoulanille/wasm_load_tfjs_test.git
+git clone https://github.com/mattsoulanille/wasm_load_tfjs_test.git
 ```
 
 ### Install packages
