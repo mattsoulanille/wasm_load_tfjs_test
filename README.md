@@ -1,11 +1,14 @@
 # WASM Load TFJS
 
-Demo loading a tfjs graph model synchronously from wasm. This uses a new synchronous http api. It's not efficient since it has to load each file one at a time, and it blocks the main thread while loading. It could be run in a webworker, but it still would only load one file at a time.
+Demo loading a file synchronously using a WASM pthread proxy. This method enables using asynchronous fetch from WASM without using Asyncify. It can be extended to load a TFJS model for a synchronous WASM application.
+
+Right now, the demo loads a single file, but since it can run asynchronously, it can be modified to load multiple files at once.
 
 ## Files
 * `cc/main.cc` is the main wasm entrypoint.
-* `web/index.ts` loads `main.cc` and is the main js entrypoint.
-* `web/http_sync.ts` is a synchronous tfjs IO handler that loads the model using a synchronous XMLHttpRequest.
+* `web/index.html` is the html page.
+* `cc/load_with_proxy.js.lds` is the asynchronous javascript code that runs in the proxied pthread and fetches the file.
+* `cc/thread_utils.h` is Emscripten's implementation of a ProxyWorker. It proxies synchronous and asynchronous function calls to pthreads.
 
 ## How to run
 ### Clone the repo
@@ -25,5 +28,3 @@ yarn
 ```shell
 yarn serve
 ```
-
-Check the javascript console for results. The network tab shows the issue with synchronous loading, where only one file can be loaded at a time.
