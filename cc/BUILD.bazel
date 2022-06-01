@@ -1,4 +1,6 @@
 load("@emsdk//emscripten_toolchain:wasm_rules.bzl", "wasm_cc_binary")
+load("@npm//@bazel/concatjs:index.bzl", "ts_library")
+load("@build_bazel_rules_nodejs//:index.bzl", "js_library")
 
 
 package(default_visibility = ["//visibility:public"])
@@ -24,8 +26,8 @@ cc_binary(
         "-pthread",
     ],
     linkopts = [
-        #"-s MODULARIZE=1",
-        #"-s EXPORT_NAME='MainWasm'", # This option breaks pthreads by renaming 'Module' to whatever is set here, but main.worker.js always assumes it's 'Module'.
+        "-s MODULARIZE=1",
+        "-s EXPORT_NAME='MainWasm'", # This option breaks pthreads by renaming 'Module' to whatever is set here, but main.worker.js always assumes it's 'Module'.
         # _emscripten_proxy_finish is needed for notifying emscripten when an
         # async pthread proxy is done.
         "-s EXPORTED_FUNCTIONS=_emscripten_proxy_finish,_main",
@@ -47,3 +49,11 @@ wasm_cc_binary(
     cc_target = ":main",
 )
 
+js_library(
+    name = "main_lib",
+    srcs = [
+        "main.d.ts",
+        ":main_wasm",
+    ],
+    package_name = "main_wasm",
+);
