@@ -14,6 +14,12 @@ Demo loading a tfjs graph model synchronously from wasm. This uses a new synchro
 git clone --recurse-submodules https://github.com/mattsoulanille/wasm_load_tfjs_test.git
 ```
 
+### Install packages
+
+```shell
+yarn
+```
+
 ### Serve the test app
 
 ```shell
