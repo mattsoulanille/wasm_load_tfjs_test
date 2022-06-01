@@ -1,44 +1,10 @@
-load("@npm//@bazel/typescript:index.bzl", "ts_project")
-load("@npm//@bazel/concatjs:index.bzl", "ts_library")
-load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_test", "nodejs_binary")
-load ("@npm//http-server:index.bzl", "http_server");
 load ("@npm//node-static:index.bzl", "static");
 load("@build_bazel_rules_nodejs//:index.bzl", "pkg_web")
-load("@npm//@bazel/esbuild:index.bzl", "esbuild")
-load("@npm//@bazel/rollup:index.bzl", "rollup_bundle")
-
-ts_library(
-    name = "index_lib",
-    srcs = [
-        "index.ts",
-        "http_sync.ts",
-    ],
-    deps = [
-        "//cc:main_lib",
-        "@npm//@tensorflow/tfjs",
-        "@npm//@tensorflow/tfjs-core",
-        "@npm//comlink",
-    ]
-)
-
-rollup_bundle(
-    name = "index_bundle",
-    entry_point = "index.ts",
-    deps = [
-        ":index_lib",
-        "//cc:main_lib",
-        "@npm//@rollup/plugin-node-resolve",
-        "@npm//@rollup/plugin-commonjs",
-        "@npm//rollup-plugin-sourcemaps",
-    ],
-    config_file = "//:rollup.config.js",
-)
 
 pkg_web(
     name = "server_files",
     srcs = [
         "index.html",
-        ":index_bundle",
         "//cc:main_wasm",
         "//cc:cc_srcs",
     ],
@@ -56,12 +22,3 @@ static(
         "web/server_files",
     ],
 )
-
-nodejs_binary(
-    name = "index_bin",
-    data = [
-        ":index_lib",
-    ],
-    entry_point = ":index.ts",
-)
-

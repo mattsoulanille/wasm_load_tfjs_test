@@ -23,52 +23,30 @@
 #include "thread_utils.h"
 #include <time.h>
 
-
-EM_JS(void, load_model, (), {
-    const modelUrl =
-        "https://storage.googleapis.com/tfjs-models/savedmodel/mobilenet_v2_1.0_224/model.json";
-    self.model = tf.loadGraphModelSync(httpSync(modelUrl));
-});
-
-EM_JS(void, run_model, (), {
-    const model = self.model;
-    const zeros = tf.zeros([1, 224, 224, 3]);
-    const result = model.predict(zeros);
-    result.print();
-});
-
 extern "C" {
 
 extern void load_with_proxy(em_proxying_ctx* ctx, const char* url, void* data, uint32_t max_len, uint32_t* received_len);
 
 int main() {
-  #ifdef __EMSCRIPTEN_PTHREADS__
-  printf("Targeting pthreads\n");
-  #endif
-
-  // printf("Loading model\n");
-  // load_model();
-  // printf("finished running load_model\n");
-  // run_model();
-  // printf("finished running run_model\n");
-
+  // Create a ProxyWorker that will proxy function calls into pthreads.
   emscripten::ProxyWorker proxy;
 
+  // Allocate a buffer for storing the model. There's probably a better way to
+  // do this.
   uint32_t max_len = 200000;
   char data[max_len];
-  uint32_t received_len;
+  uint32_t received_len; // load_with_proxy will tell us how long the file
+                         // actually is.
 
+  // Load the model file.
   // https://github.com/emscripten-core/emscripten/blob/main/system/lib/wasmfs/backends/opfs_backend.cpp#L134
   proxy([&](auto ctx) { load_with_proxy(ctx.ctx, "https://storage.googleapis.com/tfjs-models/savedmodel/mobilenet_v2_1.0_224/model.json", &data, max_len, &received_len); });
 
+  // Add null termination to the char array to make it a string.
   data[received_len] = '\0';
   printf("After proxy call\n");
   printf("Got %d bytes\n", received_len);
   printf("Data:\n%s\n", data);
-  // for (int i = 0; i < received_len; i++) {
-  //   printf("%c", data[i]);
-  // }
-
 
   return 0;
 }

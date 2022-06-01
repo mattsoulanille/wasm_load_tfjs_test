@@ -1,6 +1,4 @@
 load("@emsdk//emscripten_toolchain:wasm_rules.bzl", "wasm_cc_binary")
-load("@build_bazel_rules_nodejs//:index.bzl", "js_library")
-load("@npm//@bazel/concatjs:index.bzl", "ts_library")
 
 
 package(default_visibility = ["//visibility:public"])
@@ -10,23 +8,14 @@ filegroup(
     srcs = glob(["*.cc"]),
 )
 
-js_library(
-    name = "load_with_proxy",
-    srcs = [
-        "load_with_proxy.js",
-    ],
-)
-
 cc_binary(
     name = "main",
     srcs = [
         "main.cc",
         "thread_utils.h",
     ],
-    # additional_linker_inputs = [
-    #     "load_with_proxy.js",
-    # ],
     deps = [
+        # using .lds extension because cc_library does not allow .js
         "load_with_proxy.js.lds",
     ],
     copts = [
@@ -37,19 +26,19 @@ cc_binary(
     linkopts = [
         #"-s MODULARIZE=1",
         #"-s EXPORT_NAME='MainWasm'", # This option breaks pthreads by renaming 'Module' to whatever is set here, but main.worker.js always assumes it's 'Module'.
-        #"-s ASYNCIFY",
-        #"-s ASYNCIFY_IGNORE_INDIRECT",
-        #"-s ASYNCIFY_IMPORTS=",
-        #"-s ASYNCIFY_ADVISE",
+        # _emscripten_proxy_finish is needed for notifying emscripten when an
+        # async pthread proxy is done.
         "-s EXPORTED_FUNCTIONS=_emscripten_proxy_finish,_main",
         "-s USE_PTHREADS",
         "-pthread",
         #"-s PTHREAD_POOL_SIZE=2",
         "-s PTHREAD_POOL_SIZE_STRICT=0",
         "-s PROXY_TO_PTHREAD",
+        # Load the javascript library that implements load_with_proxy.
+        "--js-library $(location load_with_proxy.js.lds)",
+        # Debug options
         "-g3",
         "-gsource-map",
-        "--js-library $(location load_with_proxy.js.lds)",
    ],
 )
 
@@ -58,12 +47,3 @@ wasm_cc_binary(
     cc_target = ":main",
 )
 
-js_library(
-    name = "main_lib",
-    srcs = [
-        ":main_wasm",
-        "index.js",
-        "index.d.ts",
-    ],
-    package_name = "main_wasm",
-)
