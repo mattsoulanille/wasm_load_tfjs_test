@@ -1,8 +1,6 @@
 # WASM Load TFJS
 
-Demo loading a file synchronously using a WASM pthread proxy. This method enables using asynchronous fetch from WASM without using Asyncify. It can be extended to load a TFJS model for a synchronous WASM application.
-
-Right now, the demo loads a single file, but since it can run asynchronously, it can be modified to load multiple files at once.
+Demo loading a file synchronously using a WASM pthread proxy. This method uses asynchronous fetch from WASM without Asyncify. Instead, it uses [Emscripten's proxying API](https://emscripten.org/docs/api_reference/proxying.h.html) to run fetch() in a pthread. This example only loads a single file, but it can be extended to load multiple files or a TFJS model for a synchronous WASM application.
 
 ## Files
 * `cc/main.cc` is the main wasm entrypoint.
