@@ -36,6 +36,8 @@ cc_binary(
         "-s PROXY_TO_PTHREAD",
         # Load the javascript library that implements load_with_proxy.
         "--js-library $(location load_with_proxy.js.lds)",
+        "-s ALLOW_MEMORY_GROWTH",
+        "-s SAFE_HEAP",
         # Debug options
         "-g3",
         "-gsource-map",

@@ -15,40 +15,111 @@
  * =============================================================================
  */
 
+#include <sched.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <cstdio>
 #include <ctime>
 #include <string>
 #include <emscripten.h>
 #include <emscripten/proxying.h>
 #include "thread_utils.h"
 #include <time.h>
+#include <string.h>
 
 extern "C" {
 
-extern void load_with_proxy(em_proxying_ctx* ctx, const char* url, void* data, uint32_t max_len, uint32_t* received_len);
+/*
+ * Load some files using a proxy queue.
+ *
+ * Downloads all the files in the `url` list and stores their contents in a new
+ * data array that it allocates. Sets the `data_ptr` to point to this new array.
+ *
+ * You must `free(*data_ptr)` when you're done with it.
+ *
+ * Sets `offsets` to the end of each file in *data_ptr. For example:
+ *                      (offset = 0)
+ *   file0: 5 bytes     (offset += 5)
+ *   file1: 15 bytes    (offset += 15)
+ *   file2: 10 bytes    (offset += 10)
+ *
+ *   offsets == {5, 20, 30}
+ *   *data_ptr has length 30
+ */
+extern void load_with_proxy(em_proxying_ctx* ctx, uint32_t urls_count,
+                            const char* url[], char** data_ptr,
+                            uint32_t offsets[]);
 
 int main() {
   // Create a ProxyWorker that will proxy function calls into pthreads.
   emscripten::ProxyWorker proxy;
 
+  constexpr int url_count = 5;
+
   // Allocate a buffer for storing the model. There's probably a better way to
   // do this.
-  uint32_t max_len = 200000;
-  char data[max_len];
-  uint32_t received_len; // load_with_proxy will tell us how long the file
-                         // actually is.
+  char* data_ptr[] = {nullptr};
 
-  // Load the model file.
-  // https://github.com/emscripten-core/emscripten/blob/main/system/lib/wasmfs/backends/opfs_backend.cpp#L134
-  proxy([&](auto ctx) { load_with_proxy(ctx.ctx, "https://storage.googleapis.com/tfjs-models/savedmodel/mobilenet_v2_1.0_224/model.json", &data, max_len, &received_len); });
+  // The offsets of each file loaded by load_with_proxy.
+  uint32_t offsets[url_count];
 
-  // Add null termination to the char array to make it a string.
-  data[received_len] = '\0';
+  // These urls include the model.json file and the weights files.
+  const char* urls[] = {
+    "https://storage.googleapis.com/tfjs-models/savedmodel/mobilenet_v2_1.0_224/model.json\0",
+    "https://storage.googleapis.com/tfjs-models/savedmodel/mobilenet_v2_1.0_224/group1-shard1of4\0",
+    "https://storage.googleapis.com/tfjs-models/savedmodel/mobilenet_v2_1.0_224/group1-shard2of4\0",
+    "https://storage.googleapis.com/tfjs-models/savedmodel/mobilenet_v2_1.0_224/group1-shard3of4\0",
+    "https://storage.googleapis.com/tfjs-models/savedmodel/mobilenet_v2_1.0_224/group1-shard4of4\0",
+  };
+
+  printf("Calling proxy\n");
+  proxy([&](auto ctx) { load_with_proxy(ctx.ctx, url_count, urls, data_ptr, offsets); });
   printf("After proxy call\n");
-  printf("Got %d bytes\n", received_len);
-  printf("Data:\n%s\n", data);
 
+  char* data = *data_ptr;
+
+  printf("Offsets are %d, %d, %d, %d, %d\n", offsets[0], offsets[1],
+         offsets[2], offsets[3], offsets[4]);
+
+  // Copy the model json to a string
+  printf("Allocating %d bytes for model.json\n", offsets[0] + 1);
+  char* model_json_chars = (char*) calloc(offsets[0] + 1, sizeof(char));
+  strncpy(model_json_chars, data, offsets[0]);
+  model_json_chars[offsets[0]] = '\0'; // Null terminate the string.
+  std::string model_json = model_json_chars;
+  free(model_json_chars);
+
+  // Get a pointer to the model weights files. They are already concatenated, so
+  // no extra copying is required.
+  char* model_weights = data + offsets[0];
+  size_t model_weights_len = offsets[4] - offsets[0];
+
+  EM_ASM({
+      importScripts("https://cdn.jsdelivr.net/npm/@tensorflow/tfjs/dist/tf.js");
+      const modelJson = JSON.parse(UTF8ToString($0));
+      console.log(modelJson);
+      const weights = wasmMemory.buffer.slice($1, $1 + $2);
+      modelJson.weightData = weights;
+      modelJson.weightSpecs = modelJson.weightsManifest[0].weights;
+      const ioHandler = tf.io.fromMemorySync(modelJson);
+      const model = tf.loadGraphModelSync(ioHandler);
+
+      const input = tf.randomUniform([1, 224, 224, 3]);
+      const prediction = model.predict(input).dataSync();
+
+      tf.loadGraphModel("https://storage.googleapis.com/tfjs-models/savedmodel/mobilenet_v2_1.0_224/model.json")
+          .then((expectedModel) => {
+              const expectedPrediction = expectedModel.predict(input).dataSync();
+              for (let i = 0; i < expectedPrediction.length; i++) {
+                if (prediction[i] !== expectedPrediction[i]) {
+                  throw new Error(`Prediction did not match expected at ${i}`);
+                }
+              }
+              console.log("Prediction and expected prediction match");
+            });
+    }, model_json.c_str(), model_weights, model_weights_len);
+
+  free(data);
   return 0;
 }
-
 }
