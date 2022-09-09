@@ -101,6 +101,13 @@ int main() {
       const weights = wasmMemory.buffer.slice($1, $1 + $2);
       modelJson.weightData = weights;
       modelJson.weightSpecs = modelJson.weightsManifest[0].weights;
+
+      // Copy the weights metadata to weightSpecs.
+      modelJson.weightSpecs = [];
+      for (const entry of modelJson.weightsManifest) {
+        modelJson.weightSpecs.push(...entry.weights);
+      }
+
       const ioHandler = tf.io.fromMemorySync(modelJson);
       const model = tf.loadGraphModelSync(ioHandler);
 
