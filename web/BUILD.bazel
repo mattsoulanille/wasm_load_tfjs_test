@@ -1,12 +1,13 @@
-load ("@npm//node-static:index.bzl", "static");
+load("@npm//node-static:index.bzl", "static")
 load("@build_bazel_rules_nodejs//:index.bzl", "pkg_web")
 
 pkg_web(
     name = "server_files",
     srcs = [
         "index.html",
-        "//cc:main_wasm",
         "//cc:cc_srcs",
+        "//cc:main_wasm",
+        "//web/double_model",
     ],
     additional_root_paths = [
         "cc/main_wasm",
@@ -18,7 +19,7 @@ static(
     data = [":server_files"],
     templated_args = [
         "-a 0.0.0.0",
-        "-H '{\"Cross-Origin-Opener-Policy\": \"same-origin\", \"Cross-Origin-Embedder-Policy\": \"require-corp\", \"Cache-Control\": \"no-cache, must-revalidate\"}'", # CORS headers for SharedArrayBuffer. Cache headers.
+        "-H '{\"Cross-Origin-Opener-Policy\": \"same-origin\", \"Cross-Origin-Embedder-Policy\": \"require-corp\", \"Cache-Control\": \"no-cache, must-revalidate\"}'",  # CORS headers for SharedArrayBuffer. Cache headers.
         "web/server_files",
     ],
 )

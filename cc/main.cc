@@ -46,15 +46,22 @@ extern "C" {
  *   offsets == {5, 20, 30}
  *   *data_ptr has length 30
  */
-extern void load_with_proxy(em_proxying_ctx* ctx, uint32_t urls_count,
-                            const char* url[], char** data_ptr,
+extern void load_with_proxy(em_proxying_ctx *ctx, uint32_t urls_count,
+                            const char *url[], char **data_ptr,
                             uint32_t offsets[]);
+
+extern void create_layers_model(em_proxying_ctx *ctx, const char *model_json,
+                                void *weights, uint32_t weights_size,
+                                uint32_t *model_id);
+
+extern void predict(em_proxying_ctx *ctx, uint32_t model_id, const float *input,
+                    uint32_t input_len, float **output, uint32_t *output_len);
 
 int main() {
   // Create a ProxyWorker that will proxy function calls into pthreads.
   emscripten::ProxyWorker proxy;
 
-  constexpr int url_count = 5;
+  constexpr int url_count = 2;
 
   // Allocate a buffer for storing the model. There's probably a better way to
   // do this.
@@ -65,11 +72,8 @@ int main() {
 
   // These urls include the model.json file and the weights files.
   const char* urls[] = {
-    "https://storage.googleapis.com/tfjs-models/savedmodel/mobilenet_v2_1.0_224/model.json\0",
-    "https://storage.googleapis.com/tfjs-models/savedmodel/mobilenet_v2_1.0_224/group1-shard1of4\0",
-    "https://storage.googleapis.com/tfjs-models/savedmodel/mobilenet_v2_1.0_224/group1-shard2of4\0",
-    "https://storage.googleapis.com/tfjs-models/savedmodel/mobilenet_v2_1.0_224/group1-shard3of4\0",
-    "https://storage.googleapis.com/tfjs-models/savedmodel/mobilenet_v2_1.0_224/group1-shard4of4\0",
+    "double_model/model.json\0",
+    "double_model/weights.bin\0",
   };
 
   printf("Calling proxy\n");
@@ -77,9 +81,6 @@ int main() {
   printf("After proxy call\n");
 
   char* data = *data_ptr;
-
-  printf("Offsets are %d, %d, %d, %d, %d\n", offsets[0], offsets[1],
-         offsets[2], offsets[3], offsets[4]);
 
   // Copy the model json to a string
   printf("Allocating %d bytes for model.json\n", offsets[0] + 1);
@@ -92,40 +93,29 @@ int main() {
   // Get a pointer to the model weights files. They are already concatenated, so
   // no extra copying is required.
   char* model_weights = data + offsets[0];
-  size_t model_weights_len = offsets[4] - offsets[0];
+  size_t model_weights_len = offsets[1] - offsets[0];
 
-  EM_ASM({
-      importScripts("https://cdn.jsdelivr.net/npm/@tensorflow/tfjs/dist/tf.js");
-      const modelJson = JSON.parse(UTF8ToString($0));
-      console.log(modelJson);
-      const weights = wasmMemory.buffer.slice($1, $1 + $2);
-      modelJson.weightData = weights;
-      modelJson.weightSpecs = modelJson.weightsManifest[0].weights;
+  // Create the layers model
+  uint32_t model_id;
+  proxy([&](auto ctx) {
+    create_layers_model(ctx.ctx, model_json.c_str(), model_weights,
+                        model_weights_len, &model_id);
+  });
 
-      // Copy the weights metadata to weightSpecs.
-      modelJson.weightSpecs = [];
-      for (const entry of modelJson.weightsManifest) {
-        modelJson.weightSpecs.push(...entry.weights);
-      }
+  printf("Created layers model with id %d\n", model_id);
+  
+  float input[] = {1,2,3,4};
+  float *output;
+  uint32_t output_len;
+  printf("Calling model with input %f, %f, %f, %f\n", input[0], input[1], input[2],
+         input[3]);
+  proxy([&](auto ctx) {
+    predict(ctx.ctx, model_id, input, 4, &output, &output_len);
+  });
 
-      const ioHandler = tf.io.fromMemorySync(modelJson);
-      const model = tf.loadGraphModelSync(ioHandler);
+  printf("Got output %f, %f, %f, %f\n", output[0], output[1], output[2], output[3]);
 
-      const input = tf.randomUniform([1, 224, 224, 3]);
-      const prediction = model.predict(input).dataSync();
-
-      tf.loadGraphModel("https://storage.googleapis.com/tfjs-models/savedmodel/mobilenet_v2_1.0_224/model.json")
-          .then((expectedModel) => {
-              const expectedPrediction = expectedModel.predict(input).dataSync();
-              for (let i = 0; i < expectedPrediction.length; i++) {
-                if (prediction[i] !== expectedPrediction[i]) {
-                  throw new Error(`Prediction did not match expected at ${i}`);
-                }
-              }
-              console.log("Prediction and expected prediction match");
-            });
-    }, model_json.c_str(), model_weights, model_weights_len);
-
+  free(output);
   free(data);
   return 0;
 }
